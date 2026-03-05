@@ -1,0 +1,1271 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ASGROUP | Scalable Tech</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- Alpine.js for routing and interaction -->
+    <script src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
+    <!-- Lucide Icons -->
+    <script src="https://unpkg.com/lucide@latest"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+        body {
+            font-family: 'Plus Jakarta Sans', sans-serif;
+            scroll-behavior: smooth;
+        }
+
+        [x-cloak] {
+            display: none !important;
+        }
+
+
+        @keyframes float {
+            0% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-10px) rotate(5deg);
+            }
+
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+        }
+
+        .animate-float {
+            animation: float 4s ease-in-out infinite;
+        }
+
+        .typing-cursor::after {
+            content: '|';
+            animation: blink 1s infinite;
+        }
+
+        @keyframes blink {
+
+            0%,
+            100% {
+                opacity: 1;
+            }
+
+            50% {
+                opacity: 0;
+            }
+        }
+
+        /* Diagonal Mask for Investment Section */
+        .investment-mask {
+            clip-path: polygon(0 0, 100% 0, 100% 85%, 50% 100%, 0 85%);
+        }
+
+        /* Modern Curvy Mask */
+        .curvy-mask {
+            border-radius: 40px 140px 40px 140px;
+        }
+
+        /* Dynamic Position Hover Image */
+        .service-image-container {
+            position: fixed;
+            right: 15%;
+            width: 180px;
+            height: 240px;
+            pointer-events: none;
+            z-index: 50;
+            overflow: hidden;
+            opacity: 0;
+            transform: translate(0, -50%) rotate(0deg) scale(0.8);
+            transition:
+                opacity 0.4s ease,
+                transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1),
+                top 0.3s ease-out;
+            clip-path: inset(100% 0 0 0);
+        }
+
+        .service-image-container.active {
+            opacity: 1;
+            transform: translate(0, -50%) rotate(-45deg) scale(1);
+            clip-path: inset(0% 0 0 0);
+        }
+
+        .service-image-container img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transform: rotate(45deg) scale(1.5);
+        }
+
+        .service-description {
+            max-height: 0;
+            opacity: 0;
+            overflow: hidden;
+            transition: max-height 0.5s ease, opacity 0.5s ease, margin-top 0.5s ease;
+        }
+
+        .group:hover .service-description {
+            max-height: 200px;
+            opacity: 1;
+            margin-top: 1.5rem;
+        }
+
+        .custom-mask {
+            clip-path: polygon(0% 0%, 75% 0%, 100% 15%, 100% 100%, 0% 100%);
+        }
+    </style>
+</head>
+
+<body class="bg-white text-[#1a1a1a]" x-data="{ 
+    currentPage: 'home', 
+    typedText: '',
+    fullText: 'Scalable Tech & Sustainable Wealth.',
+    activeServiceImg: '',
+    showHoverImg: false,
+    mouseY: 0,
+    initTyping() {
+        this.typedText = '';
+        let i = 0;
+        let interval = setInterval(() => {
+            if (i < this.fullText.length) {
+                this.typedText += this.fullText.charAt(i);
+                i++;
+            } else {
+                clearInterval(interval);
+                setTimeout(() => this.initTyping(), 3000); 
+            }
+        }, 80);
+    },
+    handleHover(img, event) {
+        this.activeServiceImg = img;
+        this.showHoverImg = true;
+        this.mouseY = event.clientY;
+    }
+}"
+    x-init="initTyping(); $watch('currentPage', val => { window.scrollTo(0,0); setTimeout(() => lucide.createIcons(), 50); })">
+
+    <!-- HEADER -->
+    <header class="fixed w-full top-0 z-50 bg-white/95 backdrop-blur-md shadow-sm border-b border-gray-100">
+        <div class="container mx-auto px-6 py-4 flex items-center justify-between">
+            <div class="flex items-center gap-2 cursor-pointer" @click="currentPage = 'home'">
+                <div class="bg-yellow-400 w-10 h-10 rounded flex items-center justify-center">
+                    <span class="text-black font-extrabold text-xl">The</span>
+                </div>
+                <span class="text-2xl font-extrabold tracking-tight uppercase">ASGROUP</span>
+            </div>
+
+            <nav class="hidden lg:flex items-center gap-8 text-sm font-medium">
+                <button @click="currentPage = 'home'"
+                    :class="currentPage === 'home' ? 'bg-yellow-400 px-4 py-1 rounded-md' : 'hover:text-yellow-500'"
+                    class="font-semibold transition-all">Home</button>
+                <button @click="currentPage = 'about'"
+                    :class="currentPage === 'about' ? 'bg-yellow-400 px-4 py-1 rounded-md' : 'hover:text-yellow-500'"
+                    class="font-semibold transition-all">About Us</button>
+                <button @click="currentPage = 'services'"
+                    :class="currentPage === 'services' ? 'bg-yellow-400 px-4 py-1 rounded-md' : 'hover:text-yellow-500'"
+                    class="font-semibold transition-all">Services</button>
+                <button @click="currentPage = 'contact'"
+                    :class="currentPage === 'contact' ? 'bg-yellow-400 px-4 py-1 rounded-md' : 'hover:text-yellow-500'"
+                    class="font-semibold transition-all">Contact</button>
+            </nav>
+
+            <div class="flex items-center gap-6">
+                <button
+                    class="bg-[#1e1e1e] text-white px-6 py-2.5 rounded text-sm font-semibold hover:bg-black transition-all">
+                    Personal Quote
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <main class="pt-20">
+
+        <!-- HOME PAGE -->
+        <template x-if="currentPage === 'home'">
+            <div class="animate-in fade-in duration-700">
+                <section class="pt-24 pb-16 container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-12 items-start">
+                    <div>
+                        <h1 class="text-5xl md:text-7xl font-bold leading-tight uppercase tracking-tighter">
+                            Empowering <br />
+                            <span class="text-black">Digital Tech</span> <span class="font-normal">&</span> <br />
+                            Smart Capital.
+                        </h1>
+                        <div class="mt-12 max-w-xs block lg:hidden">
+                            <p class="text-gray-600 mb-8 leading-relaxed">ASGROUP is a dual-force ecosystem providing
+                                enterprise-grade IT solutions and strategic investment management.</p>
+                            <button @click="currentPage = 'contact'"
+                                class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 flex items-center gap-3 font-bold transition-all group">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i> Book A Meeting
+                            </button>
+                        </div>
+                    </div>
+                    <div class="hidden lg:flex flex-col items-end mt-12">
+                        <div class="max-w-xs text-right">
+                            <p class="text-gray-600 mb-8 leading-relaxed">We combine proven IT strategies with
+                                personalized financial guidance to help you build and secure your future.</p>
+                            <button @click="currentPage = 'contact'"
+                                class="bg-yellow-400 hover:bg-yellow-500 text-black px-8 py-4 flex items-center gap-3 font-bold transition-all group ml-auto">
+                                <i data-lucide="chevron-right" class="w-4 h-4"></i> Book A Meeting
+                            </button>
+                        </div>
+                    </div>
+                </section>
+
+                <div class="relative w-full mt-[-40px]">
+
+                    <!-- IMAGE WITH CLIP PATH -->
+                    <div class="relative h-[600px] border-t-4 border-yellow-400 overflow-hidden"
+                        style="clip-path: polygon(0 15%, 55% 15%, 65% 0, 100% 0, 100% 100%, 0 100%)">
+
+                        <img src="https://images.unsplash.com/photo-1485827404703-89b55fcc595e?q=80&w=2000"
+                            class="w-full h-full object-cover object-center" alt="Main">
+
+                    </div>
+
+                    <!-- FLOATING CARD (OUTSIDE CLIP-PATH) -->
+                    <div class="absolute -bottom-20 left-10 right-10 -px-10 z-50">
+                        <div class="container mx-auto">
+
+                            <div
+                                class="bg-white rounded-lg p-6 md:p-8 flex flex-col md:flex-row items-center gap-8 shadow-2xl border-b-4 border-yellow-400">
+
+                                <!-- LEFT -->
+                                <div class="border-l-2 border-gray-300 pl-4 shrink-0">
+                                    <span
+                                        class="text-xs uppercase tracking-widest text-gray-400 flex items-center gap-2">
+                                        <span class="w-4 h-[1px] bg-gray-400"></span>
+                                        Partners
+                                    </span>
+                                    <p class="text-sm font-bold text-gray-800 mt-1 uppercase">
+                                        Trusted Technology
+                                    </p>
+                                </div>
+
+                                <!-- MARQUEE -->
+
+                                <div class="relative overflow-hidden w-full">
+
+                                    <marquee behavior="scroll" direction="left" scrollamount="6"
+                                        onmouseover="this.stop();" onmouseout="this.start();"
+                                        style="font-weight:700; font-size:14px; text-transform:uppercase; color:#000; white-space:nowrap;">
+
+                                        IT Solutions &nbsp;&nbsp;&nbsp;
+                                        Web Development &nbsp;&nbsp;&nbsp;
+                                        App Development &nbsp;&nbsp;&nbsp;
+                                        Cyber Security &nbsp;&nbsp;&nbsp;
+                                        Digital Marketing &nbsp;&nbsp;&nbsp;
+
+                                        IT Solutions &nbsp;&nbsp;&nbsp;
+                                        Web Development &nbsp;&nbsp;&nbsp;
+                                        App Development &nbsp;&nbsp;&nbsp;
+                                        Cyber Security &nbsp;&nbsp;&nbsp;
+                                        Digital Marketing
+
+                                        IT Solutions &nbsp;&nbsp;&nbsp;
+                                        Web Development &nbsp;&nbsp;&nbsp;
+                                        App Development &nbsp;&nbsp;&nbsp;
+                                        Cyber Security &nbsp;&nbsp;&nbsp;
+                                        Digital Marketing
+
+                                        IT Solutions &nbsp;&nbsp;&nbsp;
+                                        Web Development &nbsp;&nbsp;&nbsp;
+                                        App Development &nbsp;&nbsp;&nbsp;
+                                        Cyber Security &nbsp;&nbsp;&nbsp;
+                                        Digital Marketing
+
+                                    </marquee>
+
+                                </div>
+
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+                <!-- YHA SE OUR REACH SECTION AAYEGA -->
+                <section class="py-24 container mx-auto px-6 text-center">
+
+                    <!-- TOP LABEL -->
+                    <div class="flex items-center justify-center gap-2 mb-6">
+                        <span class="w-8 h-[1px] bg-black"></span>
+                        <span class="text-xs font-bold uppercase tracking-widest">Our Reach</span>
+                        <span class="w-8 h-[1px] bg-black"></span>
+                    </div>
+
+                    <!-- HEADING -->
+                    <h2
+                        class="text-4xl md:text-6xl font-bold max-w-5xl mx-auto leading-snug uppercase tracking-tighter">
+
+                        IT Companies
+                        <img src="https://images.unsplash.com/photo-1519389950473-47ba0277781c?w=100&h=60&fit=crop"
+                            class="inline-block w-[60px] h-[35px] rounded-full mx-2 align-middle object-cover border"
+                            alt="">
+
+                        Build Infrastructure
+                        <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?w=100&h=60&fit=crop"
+                            class="inline-block w-[60px] h-[35px] rounded-full mx-2 align-middle object-cover border"
+                            alt="">
+
+                        To Enable Growth Seeking <br />
+
+                        <span id="typing-text" class="text-yellow-500 border-r-2 border-black pr-1"></span>
+                    </h2>
+
+                    <!-- STATS -->
+                    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mt-20">
+
+                        <div class="bg-gray-50 p-10 rounded-xl border border-gray-100 hover:shadow-xl transition">
+                            <h3 class="text-5xl font-black mb-4">$<span class="count" data-target="120">0</span>M+</h3>
+                            <p class="text-gray-500 text-xs font-medium uppercase tracking-widest">
+                                Annual Tech Revenue
+                            </p>
+                        </div>
+
+                        <div class="bg-gray-50 p-10 rounded-xl border border-gray-100 hover:shadow-xl transition">
+                            <h3 class="text-5xl font-black mb-4"><span class="count" data-target="500">0</span>+</h3>
+                            <p class="text-gray-500 text-xs font-medium uppercase tracking-widest">
+                                Global IT Projects
+                            </p>
+                        </div>
+
+                        <div class="bg-gray-50 p-10 rounded-xl border border-gray-100 hover:shadow-xl transition">
+                            <h3 class="text-5xl font-black mb-4"><span class="count" data-target="12000">0</span>+</h3>
+                            <p class="text-gray-500 text-xs font-medium uppercase tracking-widest">
+                                Cybersecurity Audits
+                            </p>
+                        </div>
+
+                        <div class="bg-gray-50 p-10 rounded-xl border border-gray-100 hover:shadow-xl transition">
+                            <h3 class="text-5xl font-black mb-4"><span class="count" data-target="85">0</span>%</h3>
+                            <p class="text-gray-500 text-xs font-medium uppercase tracking-widest">
+                                Client Retention
+                            </p>
+                        </div>
+
+                    </div>
+
+
+
+
+
+
+                </section>
+
+                <section class="py-20 container mx-auto px-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-12 mb-16">
+                        <div class="max-w-2xl">
+                            <h2 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter leading-none  uppercase">
+                                About Our <br /> IT Services</h2>
+                        </div>
+                        <div class="max-w-md">
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                We are a dedicated technology firm committed to providing strategic IT guidance and
+                                superior digital infrastructure management for our global clients.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+                        <div class="flex flex-col gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-gray-100 p-10 rounded-3xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Strategic Engineering</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Utilizing deep technical research,
+                                        robust infrastructure audits, and a forward-looking perspective on emerging
+                                        enterprise technologies.</p>
+                                </div>
+                                <div class="bg-black text-white p-10 rounded-3xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Risk Management</h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed">We employ disciplined security
+                                        assessments and management techniques to safeguard your digital ecosystem and
+                                        proprietary data.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white border border-gray-100 p-10 rounded-3xl shadow-lg shadow-gray-100">
+                                <h4 class="font-bold text-xl mb-4  uppercase">Transparency and Trust</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Our operations are built on a
+                                    foundation of open communication, ethical practices, and complete transparency,
+                                    ensuring our clients are fully informed partners.</p>
+                            </div>
+                        </div>
+                        <div class="relative h-[400px] lg:h-auto rounded-[60px] overflow-hidden group shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=1200"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Tech Analysis">
+                            <div class="absolute top-6 right-6">
+                                <div class="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30">
+                                    <i data-lucide="pause" class="w-5 h-5 text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- DYNAMIC SERVICE LIST SECTION -->
+                <section class="py-24 bg-gray-50">
+                    <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="relative">
+                            <div
+                                class="w-full h-[550px] overflow-hidden rounded-[80px_20px_80px_20px] shadow-2xl bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800"
+                                    class="w-full h-full object-cover" alt="Professional Office">
+                            </div>
+                            <div class="absolute -bottom-6 -right-6 bg-yellow-400 p-8 rounded-3xl hidden md:block">
+                                <h3 class="text-3xl font-black">12+</h3>
+                                <p class="text-xs font-bold uppercase">Years Excellence</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 mb-4 bg-white px-3 py-1 rounded border shadow-sm text-[10px] uppercase font-bold tracking-widest">
+                                <i data-lucide="info" class="w-3 h-3 text-yellow-500"></i> Our Philosophy
+                            </div>
+                            <h2 class="text-5xl font-bold mb-6  uppercase tracking-tighter">Your Success, <br /> Our
+                                Priority.</h2>
+                            <p class="text-gray-600 mb-12 text-lg">We're dedicated to helping you achieve your goals
+                                with a simple, user-friendly experience. We believe our commitment to your success sets
+                                ASGroup apart.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Innovate to Lead</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Foster creativity and embrace
+                                        innovation to stay ahead of the digital competition.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Optimize for Growth</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Streamline processes and resources
+                                        to maximize efficiency and profitability.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Engage with Purpose</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Build meaningful relationships with
+                                        customers through user-centric design.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Scale with Strategy</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Expand your business by
+                                        implementing structured, scalable technical plans.</p>
+                                </div>
+                            </div>
+                            <button @click="currentPage = 'contact'"
+                                class="mt-12 bg-black text-white px-10 py-4 rounded-lg font-bold hover:bg-yellow-400 hover:text-black transition-all">Join
+                                Us Today</button>
+                        </div>
+                    </div>
+                </section>
+
+
+                <!-- NEW AI INNOVATION SECTION -->
+                <section class="py-32 bg-white overflow-hidden">
+                    <div class="container mx-auto px-6">
+                        <div class="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                            <div class="relative">
+                                <div class="relative z-10 rounded-3xl overflow-hidden shadow-2xl">
+                                    <img src="https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=1200"
+                                        alt="AI Neural Network" class="w-full h-[500px] object-cover">
+                                </div>
+                                <div
+                                    class="absolute -bottom-10 -right-10 w-64 h-64 bg-yellow-400/20 rounded-full blur-3xl">
+                                </div>
+                                <div class="absolute -top-10 -left-10 w-48 h-48 bg-gray-200 rounded-full blur-2xl">
+                                </div>
+                            </div>
+
+                            <div class="flex flex-col gap-8">
+                                <div class="flex items-center gap-3">
+                                    <span class="w-12 h-[2px] bg-yellow-400"></span>
+                                    <span class="text-xs font-bold uppercase tracking-[0.3em] text-gray-500">Future
+                                        Intelligence</span>
+                                </div>
+                                <h2
+                                    class="text-5xl md:text-6xl font-bold leading-tight tracking-tighter uppercase text-shine">
+                                    Artificial Intelligence <br>
+                                    <span class="text-black">Redefining Reality</span>
+                                </h2>
+                                <p class="text-gray-600 text-lg leading-relaxed max-w-lg">
+                                    ASGROUP is at the forefront of the AI revolution, integrating generative models and
+                                    neural computing to optimize investment strategies and automate complex enterprise
+                                    workflows.
+                                </p>
+                                <div class="grid grid-cols-2 gap-6 mt-4">
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-black text-white rounded-lg flex items-center justify-center">
+                                            <i data-lucide="cpu" class="w-5 h-5"></i>
+                                        </div>
+                                        <h4 class="font-bold uppercase text-xs mt-2">Neural Networks</h4>
+                                        <p class="text-xs text-gray-500">Processing millions of data points for
+                                            predictive accuracy.</p>
+                                    </div>
+                                    <div class="flex flex-col gap-2">
+                                        <div
+                                            class="w-10 h-10 bg-yellow-400 text-black rounded-lg flex items-center justify-center">
+                                            <i data-lucide="workflow" class="w-5 h-5"></i>
+                                        </div>
+                                        <h4 class="font-bold uppercase text-xs mt-2">Smart Automation</h4>
+                                        <p class="text-xs text-gray-500">Reducing operational overhead through LLM
+                                            integration.</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+                <section class="bg-[#0a0a0a] text-white py-24 relative overflow-hidden">
+                    <div class="container mx-auto px-6 relative z-10">
+
+                        <div class="hidden lg:block service-image-container shadow-2xl border-2 border-white/10"
+                            :class="showHoverImg ? 'active' : ''" :style="`top: ${mouseY}px`">
+                            <img :src="activeServiceImg" alt="Service Preview">
+                        </div>
+
+                        <div class="text-center mb-24">
+                            <span
+                                class="inline-flex items-center gap-2 mb-4 bg-white/10 px-3 py-1 rounded border border-white/20 text-[10px] uppercase font-bold tracking-widest">
+                                <i data-lucide="layers" class="w-3 h-3 text-yellow-400"></i> Our Expertise
+                            </span>
+                            <h2 class="text-5xl md:text-7xl font-bold mb-6  uppercase tracking-tighter">Your Needs, Our
+                                Expertise</h2>
+                            <p class="text-gray-400 max-w-2xl mx-auto">Providing tailored digital and strategic
+                                solutions that deliver real results. Let's build something amazing together.</p>
+                        </div>
+
+                        <div class="max-w-4xl divide-y divide-white/10">
+                            <!-- 01 Web Design -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span class="text-yellow-400 font-bold mt-2 text-sm">01</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Web Design</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Focuses on the
+                                                    aesthetic and user experience of a website, creating visually
+                                                    appealing and intuitive layouts that enhance user engagement.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 02 Web Development -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">02</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Web Development</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Creating
+                                                    high-performance, responsive websites with seamless user experience,
+                                                    secure backend logic, and modern frontend architecture.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 03 Branding -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">03</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Branding</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Developing unique
+                                                    brand identities that resonate with target audiences and establish a
+                                                    strong market presence through strategic visual storytelling.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 04 Product Design -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">04</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Product Design</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">End-to-end product
+                                                    strategy and interface design, focusing on usability, accessibility,
+                                                    and high-impact visual aesthetics.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+            </div>
+        </template>
+
+        <!-- ABOUT PAGE -->
+        <template x-if="currentPage === 'about'">
+            <div class="animate-in fade-in duration-700">
+                <section class="py-20 container mx-auto px-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-12 mb-16">
+                        <div class="max-w-2xl">
+                            <h2 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter leading-none  uppercase">
+                                About Our <br /> IT & Investment Firm</h2>
+                        </div>
+                        <div class="max-w-md">
+                            <p class="text-gray-600 leading-relaxed">
+                                We are ASGROUP, a dedicated technology and investment firm committed to providing
+                                strategic IT solutions and superior wealth management for our global clients.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-8 items-stretch">
+                        <div class="flex flex-col gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-gray-100 p-8 rounded-2xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Strategic Engineering</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Utilizing deep technical research,
+                                        robust infrastructure audits, and a forward-looking perspective on emerging
+                                        tech.</p>
+                                </div>
+                                <div class="bg-black text-white p-8 rounded-2xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Risk Management</h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed">We employ disciplined security
+                                        assessments and management techniques to safeguard your digital and financial
+                                        assets.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white border border-gray-200 p-8 rounded-2xl shadow-sm">
+                                <h4 class="font-bold text-xl mb-4  uppercase">Transparency and Trust</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Our operations are built on a
+                                    foundation of open communication, ethical practices, and complete transparency.</p>
+                            </div>
+                        </div>
+                        <div class="relative h-[500px] lg:h-auto rounded-3xl overflow-hidden custom-mask shadow-2xl">
+                            <img src="https://i.postimg.cc/0jNqrs5h/team-working-together-project.jpg?q=80&w=500"
+                                class="w-full h-[550px] object-cover" alt="Team working">
+                        </div>
+                    </div>
+                </section>
+
+                <section class="py-24 bg-gray-50">
+                    <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="relative">
+                            <div
+                                class="w-full h-[550px] overflow-hidden rounded-[80px_20px_80px_20px] shadow-2xl bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?q=80&w=800"
+                                    class="w-full h-full object-cover" alt="Professional Office">
+                            </div>
+                            <div class="absolute -bottom-6 -right-6 bg-yellow-400 p-8 rounded-3xl hidden md:block">
+                                <h3 class="text-3xl font-black">12+</h3>
+                                <p class="text-xs font-bold uppercase">Years Excellence</p>
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 mb-4 bg-white px-3 py-1 rounded border shadow-sm text-[10px] uppercase font-bold tracking-widest">
+                                <i data-lucide="info" class="w-3 h-3 text-yellow-500"></i> Our Philosophy
+                            </div>
+                            <h2 class="text-5xl font-bold mb-6  uppercase tracking-tighter">Your Success, <br /> Our
+                                Priority.</h2>
+                            <p class="text-gray-600 mb-12 text-lg">We're dedicated to helping you achieve your goals
+                                with a simple, user-friendly experience. We believe our commitment to your success sets
+                                ASGroup apart.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-10">
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Innovate to Lead</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Foster creativity and embrace
+                                        innovation to stay ahead of the digital competition.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Optimize for Growth</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Streamline processes and resources
+                                        to maximize efficiency and profitability.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Engage with Purpose</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Build meaningful relationships with
+                                        customers through user-centric design.</p>
+                                </div>
+                                <div class="border-t border-gray-200 pt-6">
+                                    <h4 class="font-bold text-lg mb-2  uppercase">Scale with Strategy</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Expand your business by
+                                        implementing structured, scalable technical plans.</p>
+                                </div>
+                            </div>
+                            <button @click="currentPage = 'contact'"
+                                class="mt-12 bg-black text-white px-10 py-4 rounded-lg font-bold hover:bg-yellow-400 hover:text-black transition-all">Join
+                                Us Today</button>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </template>
+
+        <!-- SERVICES PAGE -->
+        <template x-if="currentPage === 'services'">
+            <div class="animate-in fade-in duration-700 bg-white">
+
+                <!-- ABOUT IT SERVICES -->
+                <section class="py-20 container mx-auto px-6">
+                    <div class="flex flex-col lg:flex-row justify-between items-start gap-12 mb-16">
+                        <div class="max-w-2xl">
+                            <h2 class="text-5xl md:text-7xl font-bold mb-6 tracking-tighter leading-none  uppercase">
+                                About Our <br /> IT Services</h2>
+                        </div>
+                        <div class="max-w-md">
+                            <p class="text-gray-600 leading-relaxed text-lg">
+                                We are a dedicated technology firm committed to providing strategic IT guidance and
+                                superior digital infrastructure management for our global clients.
+                            </p>
+                        </div>
+                    </div>
+
+                    <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-stretch">
+                        <div class="flex flex-col gap-6">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+                                <div class="bg-gray-100 p-10 rounded-3xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Strategic Engineering</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Utilizing deep technical research,
+                                        robust infrastructure audits, and a forward-looking perspective on emerging
+                                        enterprise technologies.</p>
+                                </div>
+                                <div class="bg-black text-white p-10 rounded-3xl">
+                                    <h4 class="font-bold text-xl mb-4  uppercase">Risk Management</h4>
+                                    <p class="text-gray-400 text-sm leading-relaxed">We employ disciplined security
+                                        assessments and management techniques to safeguard your digital ecosystem and
+                                        proprietary data.</p>
+                                </div>
+                            </div>
+                            <div class="bg-white border border-gray-100 p-10 rounded-3xl shadow-lg shadow-gray-100">
+                                <h4 class="font-bold text-xl mb-4  uppercase">Transparency and Trust</h4>
+                                <p class="text-gray-500 text-sm leading-relaxed">Our operations are built on a
+                                    foundation of open communication, ethical practices, and complete transparency,
+                                    ensuring our clients are fully informed partners.</p>
+                            </div>
+                        </div>
+                        <div class="relative h-[400px] lg:h-auto rounded-[60px] overflow-hidden group shadow-2xl">
+                            <img src="https://images.unsplash.com/photo-1573164713714-d95e436ab8d6?q=80&w=1200"
+                                class="w-full h-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                alt="Tech Analysis">
+                            <div class="absolute top-6 right-6">
+                                <div class="bg-white/20 backdrop-blur-md p-3 rounded-full border border-white/30">
+                                    <i data-lucide="pause" class="w-5 h-5 text-white"></i>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- WHY WE ARE BEST (YOUR SUCCESS) -->
+                <section class="py-24 bg-gray-50/50">
+                    <div class="container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
+                        <div class="relative">
+                            <div class="w-full h-[500px] overflow-hidden curvy-mask shadow-2xl bg-gray-200">
+                                <img src="https://images.unsplash.com/photo-1522202176988-66273c2fd55f?q=80&w=1000"
+                                    class="w-full h-full object-cover" alt="Successful Team">
+                            </div>
+                        </div>
+                        <div>
+                            <div
+                                class="inline-flex items-center gap-2 mb-4 bg-white px-3 py-1 rounded border shadow-sm text-[10px] uppercase font-bold tracking-widest">
+                                <i data-lucide="award" class="w-3 h-3 text-yellow-500"></i> About Us
+                            </div>
+                            <h2 class="text-5xl font-bold mb-6  uppercase tracking-tighter">Your Success, <br /> Our
+                                Priority.</h2>
+                            <p class="text-gray-600 mb-12 text-lg leading-relaxed">We're dedicated to helping you
+                                achieve your goals with a simple, user-friendly experience. We believe our commitment to
+                                your success sets us apart from the competition.</p>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-x-12 gap-y-10">
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2  uppercase border-b border-gray-200 pb-2">Innovate
+                                        to Lead</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Foster creativity and embrace
+                                        innovation to stay ahead of the digital competition through custom-built
+                                        solutions.</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2  uppercase border-b border-gray-200 pb-2">Optimize
+                                        for Growth</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Streamline processes and resources
+                                        to maximize technical efficiency and business profitability.</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2  uppercase border-b border-gray-200 pb-2">Engage
+                                        with Purpose</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Build meaningful relationships with
+                                        customers through intuitive, user-centric design and interaction.</p>
+                                </div>
+                                <div>
+                                    <h4 class="font-bold text-lg mb-2  uppercase border-b border-gray-200 pb-2">Scale
+                                        with Strategy</h4>
+                                    <p class="text-gray-500 text-sm leading-relaxed">Expand your business by
+                                        implementing structured, scalable plans that support long-term technical
+                                        evolution.</p>
+                                </div>
+                            </div>
+                            <button @click="currentPage = 'contact'"
+                                class="mt-12 bg-black text-white px-10 py-4 rounded-xl font-bold hover:bg-yellow-400 hover:text-black transition-all shadow-lg hover:shadow-yellow-200">Start
+                                Projects</button>
+                        </div>
+                    </div>
+                </section>
+
+                <!-- DYNAMIC SERVICE LIST SECTION -->
+                <section class="bg-[#0a0a0a] text-white py-24 relative overflow-hidden">
+                    <div class="container mx-auto px-6 relative z-10">
+
+                        <div class="hidden lg:block service-image-container shadow-2xl border-2 border-white/10"
+                            :class="showHoverImg ? 'active' : ''" :style="`top: ${mouseY}px`">
+                            <img :src="activeServiceImg" alt="Service Preview">
+                        </div>
+
+                        <div class="text-center mb-24">
+                            <span
+                                class="inline-flex items-center gap-2 mb-4 bg-white/10 px-3 py-1 rounded border border-white/20 text-[10px] uppercase font-bold tracking-widest">
+                                <i data-lucide="layers" class="w-3 h-3 text-yellow-400"></i> Our Expertise
+                            </span>
+                            <h2 class="text-5xl md:text-7xl font-bold mb-6  uppercase tracking-tighter">Your Needs, Our
+                                Expertise</h2>
+                            <p class="text-gray-400 max-w-2xl mx-auto">Providing tailored digital and strategic
+                                solutions that deliver real results. Let's build something amazing together.</p>
+                        </div>
+
+                        <div class="max-w-4xl divide-y divide-white/10">
+                            <!-- 01 Web Design -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1547658719-da2b51169166?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span class="text-yellow-400 font-bold mt-2 text-sm">01</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Web Design</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Focuses on the
+                                                    aesthetic and user experience of a website, creating visually
+                                                    appealing and intuitive layouts that enhance user engagement.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 02 Web Development -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1517694712202-14dd9538aa97?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">02</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Web Development</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Creating
+                                                    high-performance, responsive websites with seamless user experience,
+                                                    secure backend logic, and modern frontend architecture.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 03 Branding -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1558655146-d09347e92766?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">03</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Branding</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">Developing unique
+                                                    brand identities that resonate with target audiences and establish a
+                                                    strong market presence through strategic visual storytelling.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- 04 Product Design -->
+                            <div class="py-12 group transition-all cursor-pointer relative"
+                                @mousemove="handleHover('https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=800', $event)"
+                                @mouseleave="showHoverImg = false">
+                                <div class="flex items-center justify-between">
+                                    <div class="flex items-start gap-8">
+                                        <span
+                                            class="text-gray-600 font-bold mt-2 text-sm group-hover:text-yellow-400 transition-colors">04</span>
+                                        <div class="flex flex-col">
+                                            <h3
+                                                class="text-4xl md:text-6xl font-bold group-hover:text-yellow-400 transition-all duration-500 ease-out">
+                                                Product Design</h3>
+                                            <div class="service-description">
+                                                <p class="text-gray-400 max-w-xl leading-relaxed">End-to-end product
+                                                    strategy and interface design, focusing on usability, accessibility,
+                                                    and high-impact visual aesthetics.</p>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div
+                                        class="bg-white/5 w-14 h-14 rounded-full flex items-center justify-center group-hover:bg-yellow-400 group-hover:text-black transition-all duration-300">
+                                        <i data-lucide="arrow-up-right" class="w-5 h-5"></i>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+
+                <section class="bg-yellow-400 py-20 overflow-hidden relative z-10">
+                    <div
+                        class="container mx-auto px-6 flex flex-col lg:flex-row items-center justify-between gap-12 text-black">
+                        <div class="max-w-2xl text-center lg:text-left">
+                            <h2 class="text-5xl md:text-6xl font-black mb-4 tracking-tighter leading-none  uppercase">
+                                Need a Personalized Plan? <br /> Connect with Our Team.</h2>
+                            <p class="text-sm font-medium opacity-80 mt-4 max-w-md  uppercase">Our team will work with
+                                you one-on-one to understand your unique needs and goals, and craft a personalized plan
+                                to get you the best results.</p>
+                        </div>
+                        <div class="flex flex-col gap-4 w-full md:w-auto">
+                            <div class="bg-white px-8 py-4 rounded-xl flex items-center gap-4 shadow-xl">
+                                <div class="bg-yellow-400 p-2 rounded"><i data-lucide="mail" class="w-5 h-5"></i></div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-400 uppercase font-bold">Email Us:</span>
+                                    <span class="font-bold">info@asgroup.net.in</span>
+                                </div>
+                            </div>
+                            <div class="bg-white px-8 py-4 rounded-xl flex items-center gap-4 shadow-xl">
+                                <div class="bg-yellow-400 p-2 rounded"><i data-lucide="phone" class="w-5 h-5"></i></div>
+                                <div class="flex flex-col">
+                                    <span class="text-[10px] text-gray-400 uppercase font-bold">Call Us Now:</span>
+                                    <span class="font-bold">+91 9109345128</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </template>
+
+        <!-- CONTACT PAGE -->
+        <template x-if="currentPage === 'contact'">
+            <div class="animate-in fade-in duration-700">
+                <section class="bg-black text-white py-24">
+                    <div class="container mx-auto px-6">
+                        <h1 class="text-6xl md:text-8xl font-black mb-8  uppercase tracking-tighter">Contact Us</h1>
+                        <p class="text-gray-400 text-xl max-w-xl">Visit our Narmadapuram office or schedule a digital
+                            consultation with our experts.</p>
+                    </div>
+                </section>
+
+                <section
+                    class="py-20 -mt-16 container mx-auto px-6 grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-yellow-400">
+                        <i data-lucide="map-pin" class="mb-4 text-yellow-600"></i>
+                        <h3 class="font-bold text-xl mb-4  uppercase">Our Location</h3>
+                        <p class="text-gray-500 text-sm leading-relaxed uppercase ">Agarwal Complex, Rasuliya,
+                            Narmadapuram, Madhya Pradesh 461001</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-yellow-400">
+                        <i data-lucide="phone" class="mb-4 text-yellow-600"></i>
+                        <h3 class="font-bold text-xl mb-4  uppercase">Phone Number</h3>
+                        <p class="text-yellow-600 font-bold">+91 9109345128</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-yellow-400">
+                        <i data-lucide="mail" class="mb-4 text-yellow-600"></i>
+                        <h3 class="font-bold text-xl mb-4  uppercase">Email Address</h3>
+                        <p class="text-gray-800 font-semibold ">info@asgroup.net.in</p>
+                    </div>
+                    <div class="bg-white p-8 rounded-2xl shadow-xl border-t-4 border-yellow-400">
+                        <i data-lucide="clock" class="mb-4 text-yellow-600"></i>
+                        <h3 class="font-bold text-xl mb-4  uppercase">Office Hours</h3>
+                        <p class="text-gray-500 text-xs uppercase ">Mon-Fri: 9AM-7PM | Sat: 10AM-3PM</p>
+                    </div>
+                </section>
+
+                <section class="py-20 container mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-16">
+                    <div class="bg-gray-50 p-10 rounded-3xl border border-gray-100">
+                        <h2 class="text-3xl font-bold mb-8  uppercase tracking-tighter">Send a Message</h2>
+                        <div class="space-y-4">
+                            <input type="text" placeholder="Your Name"
+                                class="w-full p-4 rounded-xl border-none outline-none focus:ring-2 focus:ring-yellow-400 ">
+                            <input type="email" placeholder="Business Email"
+                                class="w-full p-4 rounded-xl border-none outline-none focus:ring-2 focus:ring-yellow-400 ">
+                            <textarea placeholder="Tell us about your project..." rows="4"
+                                class="w-full p-4 rounded-xl border-none outline-none focus:ring-2 focus:ring-yellow-400 "></textarea>
+                            <button
+                                class="bg-black text-white px-10 py-4 rounded-xl font-bold hover:bg-yellow-400 hover:text-black transition-all shadow-lg  uppercase">Submit
+                                Request</button>
+                        </div>
+                    </div>
+                    <div
+                        class="bg-yellow-400 p-12 rounded-[40px] flex flex-col justify-center items-center text-center">
+                        <h3 class="text-4xl font-black  uppercase mb-8 tracking-tighter">Follow Our Journey</h3>
+                        <div class="flex gap-4">
+                            <a href="#"
+                                class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-white hover:scale-110 transition-transform shadow-xl"><i
+                                    data-lucide="linkedin"></i></a>
+                            <a href="#"
+                                class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-white hover:scale-110 transition-transform shadow-xl"><i
+                                    data-lucide="twitter"></i></a>
+                            <a href="#"
+                                class="w-14 h-14 bg-black rounded-2xl flex items-center justify-center text-white hover:scale-110 transition-transform shadow-xl"><i
+                                    data-lucide="instagram"></i></a>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </template>
+    </main>
+
+    <!-- FOOTER -->
+    <footer class="relative bg-black text-gray-200 pt-20 overflow-hidden border-t border-white/5">
+
+        <!-- 🔥 Background Video -->
+        <div class="absolute inset-0 z-0 overflow-hidden">
+            <video autoplay loop muted playsinline class="w-full h-full object-cover">
+                <source
+                    src="https://cdn.prod.website-files.com/69077000329048b15fda5203%2F6909f653695bc3eed6c00b9b_footer%20bg-transcode.mp4"
+                    type="video/mp4">
+                <source
+                    src="https://cdn.prod.website-files.com/69077000329048b15fda5203%2F6909f653695bc3eed6c00b9b_footer%20bg-transcode.webm"
+                    type="video/webm">
+            </video>
+        </div>
+
+        <!-- 🌑 Dark Overlay (LOW opacity so video is visible) -->
+        <div class="absolute inset-0 bg-black/40 z-10"></div>
+
+        <!-- 📦 Footer Content -->
+        <div class="container mx-auto px-6 relative z-20">
+
+            <!-- Newsletter -->
+            <div
+                class="bg-white/5 backdrop-blur-md rounded-2xl p-8 md:p-12 mb-20 flex flex-col md:flex-row items-center justify-between gap-8 border border-white/10 shadow-2xl">
+                <h2 class="text-3xl md:text-4xl font-bold max-w-sm uppercase tracking-tighter text-gray-100">
+                    For Any Query
+                </h2>
+                <div class="flex w-full md:w-auto flex-grow max-w-lg items-center border-b border-white/30 py-3">
+                    <input type="email" placeholder="Enter Business Email"
+                        class="bg-transparent flex-grow outline-none px-4 text-lg text-gray-200 placeholder-gray-400">
+                    <button
+                        class="bg-yellow-400 text-black px-10 py-3 font-extrabold hover:bg-white transition-all uppercase text-xs">
+                        Subscribe
+                    </button>
+                </div>
+            </div>
+
+            <!-- Footer Grid -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12 mb-20">
+
+                <!-- Address -->
+                <div>
+                    <p class="text-yellow-400/90 text-[20px] font-black uppercase mb-4 tracking-[0.2em]">
+                        Headquarters
+                    </p>
+                    <p class="text-gray-300 uppercase leading-relaxed">
+                        Agarwal Complex, Rasuliya,<br>
+                        Narmadapuram, MP 461001
+                    </p>
+                    <p class="text-gray-100 text-xl font-black mt-6 tracking-tight">
+                        +91 9109345128
+                    </p>
+                </div>
+
+                <!-- Navigation -->
+                <div>
+                    <p class="text-yellow-400/90 text-[20px] font-black uppercase mb-4 tracking-[0.2em]">
+                        Navigation
+                    </p>
+                    <div class="flex flex-col gap-3 text-sm font-bold uppercase text-gray-300">
+                        <button class="text-left hover:text-yellow-400 transition-colors">Home</button>
+                        <button class="text-left hover:text-yellow-400 transition-colors">About Firm</button>
+                        <button class="text-left hover:text-yellow-400 transition-colors">IT Solutions</button>
+                        <button class="text-left hover:text-yellow-400 transition-colors">Contact Us</button>
+                    </div>
+                </div>
+
+                <!-- Insights -->
+                <div>
+                    <p class="text-yellow-400/90 text-[20px] font-black uppercase mb-4 tracking-[0.2em]">
+                        Insights
+                    </p>
+                    <div class="flex flex-col gap-3 text-sm font-bold uppercase text-gray-400">
+                        <a href="#" class="hover:text-white transition-colors">Case Studies</a>
+                        <a href="#" class="hover:text-white transition-colors">Terms & Condition</a>
+                        <a href="#" class="hover:text-white transition-colors">Privacy Policy</a>
+                    </div>
+                </div>
+
+                <!-- Social -->
+                <div>
+                    <p class="text-yellow-400/90 text-[20px] font-black uppercase mb-4 tracking-[0.2em]">
+                        Connect
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#"
+                            class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all">
+                            <i data-lucide="linkedin"></i>
+                        </a>
+                        <a href="#"
+                            class="w-12 h-12 bg-white/10 rounded-xl flex items-center justify-center hover:bg-yellow-400 hover:text-black transition-all">
+                            <i data-lucide="instagram"></i>
+                        </a>
+                    </div>
+                </div>
+
+            </div>
+
+            <!-- Big Brand Text -->
+            <div class="text-center opacity-80 pb-10 pointer-events-none select-none">
+                <h1 class="text-[14vw] font-black text-yellow-400/80 leading-none tracking-tighter">
+                    ASGROUP
+                </h1>
+            </div>
+
+        </div>
+    </footer>
+
+    <script>
+        window.addEventListener('load', () => lucide.createIcons());
+    </script>
+
+    <script>
+        const words = ["Startups", "Enterprises", "Innovators", "Global Brands"];
+        const typingElement = document.getElementById("typing-text");
+
+        let wordIndex = 0;
+        let charIndex = 0;
+        let isDeleting = false;
+
+        function typeEffect() {
+            const currentWord = words[wordIndex];
+
+            if (!isDeleting) {
+                typingElement.textContent = currentWord.substring(0, charIndex + 1);
+                charIndex++;
+                if (charIndex === currentWord.length) {
+                    setTimeout(() => isDeleting = true, 1200);
+                }
+            } else {
+                typingElement.textContent = currentWord.substring(0, charIndex - 1);
+                charIndex--;
+                if (charIndex === 0) {
+                    isDeleting = false;
+                    wordIndex = (wordIndex + 1) % words.length;
+                }
+            }
+
+            setTimeout(typeEffect, isDeleting ? 60 : 100);
+        }
+        typeEffect();
+    </script>
+
+    <!-- COUNTER SCRIPT -->
+    <script>
+        const counters = document.querySelectorAll(".count");
+        let started = false;
+
+        function startCounter() {
+            if (started) return;
+            started = true;
+
+            counters.forEach(counter => {
+                const target = +counter.dataset.target;
+                let start = 0;
+                const duration = 1800;
+                const startTime = performance.now();
+
+                function update(time) {
+                    const progress = Math.min((time - startTime) / duration, 1);
+                    const ease = 1 - Math.pow(1 - progress, 3);
+                    counter.innerText = Math.floor(ease * target).toLocaleString();
+                    if (progress < 1) requestAnimationFrame(update);
+                    else counter.innerText = target.toLocaleString();
+                }
+
+                requestAnimationFrame(update);
+            });
+        }
+
+        window.addEventListener("scroll", () => {
+            const section = document.querySelector("section");
+            const top = section.getBoundingClientRect().top;
+            if (top < window.innerHeight - 150) startCounter();
+        });
+    </script>
+
+
+
+
+    <!-- yaha se kuch hoga -->
+
+
+</body>
+
+</html>
